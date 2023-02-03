@@ -1,13 +1,13 @@
-import React from "react";
+import {useEffect, useState} from "react";
 import avatar from "../images/image.jpg";
 import api from "../utils/Api";
 import Card from "../components/Card";
 
 function Main(props) {
-    const [userName, setUserName] = React.useState('Жак-Ив Кусто');
-    const [userDescription , setUserDescription] = React.useState('Исследователь океана');
-    const [userAvatar, setUserAvatar] = React.useState(avatar);
-    const [cards, setCards] = React.useState([]);
+    const [userName, setUserName] = useState('Жак-Ив Кусто');
+    const [userDescription , setUserDescription] = useState('Исследователь океана');
+    const [userAvatar, setUserAvatar] = useState(avatar);
+    const [cards, setCards] = useState([]);
 
     function changeName(res) {
         setUserName(res.name);
@@ -21,7 +21,7 @@ function Main(props) {
         setUserAvatar(res.avatar);
     }
 
-    React.useEffect(()=> {
+    useEffect(()=> {
         api.getDataUser()
             .then((res) => {
                 changeName(res);
