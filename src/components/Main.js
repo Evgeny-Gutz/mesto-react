@@ -6,23 +6,8 @@ import Card from "../components/Card";
 import {UserContext} from '../contexts/CurrentUserContext';
 
 function Main(props) {
-    // const [userName, setUserName] = useState('Жак-Ив Кусто');
-    // const [userDescription , setUserDescription] = useState('Исследователь океана');
-    // const [userAvatar, setUserAvatar] = useState(avatar);
     const [cards, setCards] = useState([]);
     const userData = React.useContext(UserContext);
-
-    // function changeName() {
-    //     setUserName(userData.name);
-    // }
-    
-    // function changeDescription(res) {
-    //     setUserDescription(res.about);
-    // }
-    
-    // function changeAvatar(res) {
-    //     setUserAvatar(res.avatar);
-    // }
 
     useEffect(()=> {
         api.getInitialCards()
