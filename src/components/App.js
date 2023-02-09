@@ -3,6 +3,7 @@ import {useEffect, useState} from "react";
 import Header from './Header';
 import Main from './Main';
 import EditProfilePopup from './EditProfilePopup';
+import EditAvatarPopup from './EditAvatarPopup';
 import Footer from './Footer';
 import api from "../utils/Api";
 import {UserContext} from '../contexts/CurrentUserContext.js';
@@ -137,17 +138,7 @@ function App() {
                  </label>
                  <input className="popup__submit" type="submit" name="submit" value="Создать"></input>
         </PopupWithForm> 
-        <PopupWithForm 
-            name="avatar" 
-            title="Обновить аватар" 
-            isOpen={isEditAvatarPopupOpen && "popup_opened"} 
-            onClose={closeAllPopups}>
-                <label className="popup__field">
-                     <input id="link-input-avatar" className="popup__input popup__input_type_link" type="url" name="link" placeholder="Ссылка на картинку" required />
-                     <span className="link-input-avatar-error popup__input-error"></span>
-                 </label>
-                 <input className="popup__submit" type="submit" name="submit" value="Сохранить"></input>
-        </PopupWithForm>
+        <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} />
         <ImagePopup
             onOpen={handleCardClick}
             card={selectedCard}
