@@ -8,7 +8,6 @@ import AddPlacePopup from './AddPlacePopup';
 import Footer from './Footer';
 import api from "../utils/Api";
 import {UserContext} from '../contexts/CurrentUserContext.js';
-import PopupWithForm from './PopupWithForm';
 import ImagePopup from './ImagePopup';
 
 function App() {
