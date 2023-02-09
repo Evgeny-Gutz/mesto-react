@@ -23,7 +23,8 @@ function Main(props) {
                             card={card} 
                             onCardClick={props.onCardClick} 
                             onCardLike={props.onCardLike}
-                            onCardDislike={props.onCardDislike} />
+                            onCardDislike={props.onCardDislike}
+                            onCardDelete={props.onCardDelete} />
                     ))
                 }
             </section>

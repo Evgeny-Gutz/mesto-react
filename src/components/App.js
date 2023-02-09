@@ -90,6 +90,15 @@ function App() {
             })
     }
 
+    function handleCardDelete(id) {
+        api.deleteCard(id)
+            .then((resp) => {
+                setCards((state) => {
+                    return state.filter(e => e._id !== id);
+                })
+            })
+    }
+
     return (
     <UserContext.Provider value={userData}>
         <Header />
@@ -100,6 +109,7 @@ function App() {
             onCardClick={handleCardClick} 
             onCardLike={handleCardLike}
             onCardDislike={handleCardDislike}
+            onCardDelete={handleCardDelete}
             cards={cards}
             setCards={setCards} />
         <Footer />
