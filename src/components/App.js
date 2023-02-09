@@ -108,6 +108,11 @@ function App() {
             });
     }
 
+    function handleUpdateAvatar({avatar}) {
+        api.changeAvatarProfil(avatar)
+            .then(res => setCurrentUser(res));
+    }
+
     return (
     <UserContext.Provider value={currentUser}>
         <Header />
@@ -138,7 +143,7 @@ function App() {
                  </label>
                  <input className="popup__submit" type="submit" name="submit" value="Создать"></input>
         </PopupWithForm> 
-        <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} />
+        <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} />
         <ImagePopup
             onOpen={handleCardClick}
             card={selectedCard}
