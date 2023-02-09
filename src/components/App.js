@@ -4,6 +4,7 @@ import Header from './Header';
 import Main from './Main';
 import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
+import AddPlacePopup from './AddPlacePopup';
 import Footer from './Footer';
 import api from "../utils/Api";
 import {UserContext} from '../contexts/CurrentUserContext.js';
@@ -113,6 +114,13 @@ function App() {
             .then(res => setCurrentUser(res));
     }
 
+    function handleUpdatePlace({name, link}) {
+        api.addNewCard({name, link})
+            .then(newCard => {
+                setCards([newCard, ...cards])
+            });
+    }
+
     return (
     <UserContext.Provider value={currentUser}>
         <Header />
@@ -128,21 +136,7 @@ function App() {
             setCards={setCards} />
         <Footer />
         <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} />
-        <PopupWithForm 
-            name="card" 
-            title="Новое место" 
-            isOpen={isAddPlacePopupOpen && "popup_opened"} 
-            onClose={closeAllPopups}>
-                <label className="popup__field">
-                     <input id="title-input" className="popup__input popup__input_type_title" type="text" name="title" placeholder="Название" minLength="2" maxLength="30" required />
-                     <span className="title-input-error popup__input-error"></span>
-                 </label>
-                 <label className="popup__field">
-                     <input id="link-input" className="popup__input popup__input_type_link" type="url" name="link" placeholder="Ссылка на картинку" />
-                     <span className="link-input-error popup__input-error"></span>
-                 </label>
-                 <input className="popup__submit" type="submit" name="submit" value="Создать"></input>
-        </PopupWithForm> 
+        <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlace={handleUpdatePlace} />
         <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} />
         <ImagePopup
             onOpen={handleCardClick}
