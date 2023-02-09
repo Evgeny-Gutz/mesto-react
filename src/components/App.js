@@ -1,4 +1,5 @@
 import React from 'react';
+import {useEffect, useState} from "react";
 import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
@@ -8,11 +9,12 @@ import PopupWithForm from './PopupWithForm';
 import ImagePopup from './ImagePopup';
 
 function App() {
-    const [isEditProfilePopupOpen, setEditProfilePopupOpen] = React.useState(false);
-    const [isAddPlacePopupOpen, setAddPlacePopupOpen] = React.useState(false);
-    const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = React.useState(false);
-    const [selectedCard, setSelectedCard] = React.useState({isVisible:false, name: "", link: ""});
-    const [currentUser, setCurrentUser] = React.useState({});
+    const [isEditProfilePopupOpen, setEditProfilePopupOpen] = useState(false);
+    const [isAddPlacePopupOpen, setAddPlacePopupOpen] = useState(false);
+    const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = useState(false);
+    const [selectedCard, setSelectedCard] = useState({isVisible:false, name: "", link: ""});
+    const [userData, setCurrentUser] = useState({});
+    const [cards, setCards] = useState([]);
 
     function closeAllPopups () {
         setEditAvatarPopupOpen(false);
@@ -33,12 +35,20 @@ function App() {
         if(evt.target.classList.contains('popup_opened')) closeAllPopups();
     }
 
-    React.useEffect(() => {
+    useEffect(()=> {
+        api.getInitialCards()
+            .then((cardList) => {
+                setCards([...cards, ...cardList]);
+            })
+            .catch((error) => console.log(`Ошибка при загрузке карточек: ${error}`))
+    }, []);
+
+    useEffect(() => {
         api.getDataUser()
             .then((res) => {setCurrentUser(res)});
     }, []);
     
-    React.useEffect( () => {
+    useEffect( () => {
         document.addEventListener('keydown', handleEscClose);
         document.addEventListener('mousedown', handleBackgroundClose);
 
@@ -58,14 +68,40 @@ function App() {
         setAddPlacePopupOpen(true);
     }
 
+    function handleCardLike (card) {
+        const isLiked = card.likes.some( i => i._id === userData._id);
+
+        api.setLike(card._id, !isLiked)
+            .then((newCard) => {
+                setCards((state) => {
+                    return state.map((c) => c._id === card._id ? newCard : c);
+                });
+            })
+    }
+
+    function handleCardDislike (card) {
+        const isLiked = card.likes.some( i => i._id === userData._id);
+
+        api.deleteLike(card._id, isLiked)
+            .then((newCard) => {
+                setCards((state) => {
+                    return state.map((c) => c._id === card._id ? newCard : c);
+                });
+            })
+    }
+
     return (
-    <UserContext.Provider value={currentUser}>
+    <UserContext.Provider value={userData}>
         <Header />
         <Main 
             onEditProfile={handleEditProfileClick} 
             onAddPlace={handleAddPlaceClick} 
             onEditAvatar={handleEditAvatarClick}
-            onCardClick={handleCardClick} />
+            onCardClick={handleCardClick} 
+            onCardLike={handleCardLike}
+            onCardDislike={handleCardDislike}
+            cards={cards}
+            setCards={setCards} />
         <Footer />
         <PopupWithForm 
             name="profile" 

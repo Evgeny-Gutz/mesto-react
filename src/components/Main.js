@@ -1,22 +1,9 @@
 import React from "react";
-import {useEffect, useState} from "react";
-import avatar from "../images/image.jpg";
-import api from "../utils/Api";
 import Card from "../components/Card";
 import {UserContext} from '../contexts/CurrentUserContext';
 
 function Main(props) {
-    const [cards, setCards] = useState([]);
-    const userData = React.useContext(UserContext);
-
-    useEffect(()=> {
-        api.getInitialCards()
-            .then((cardList) => {
-                setCards([...cards, ...cardList]);
-            })
-            .catch((error) => console.log(`Ошибка при загрузке карточек: ${error}`))
-    }, []);
-    
+    const userData = React.useContext(UserContext);   
     return (
         <main className="main">
             <section className="profile">
@@ -30,8 +17,13 @@ function Main(props) {
                 <button className="profile__add-button" type="button" onClick={props.onAddPlace}></button>
             </section>
             <section className="elements">
-                {cards.map((card) => (
-                        <Card key={card._id} card={card} onCardClick={props.onCardClick} />
+                {props.cards.map((card) => (
+                        <Card 
+                            key={card._id} 
+                            card={card} 
+                            onCardClick={props.onCardClick} 
+                            onCardLike={props.onCardLike}
+                            onCardDislike={props.onCardDislike} />
                     ))
                 }
             </section>
