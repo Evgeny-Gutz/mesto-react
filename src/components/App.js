@@ -14,7 +14,7 @@ function App() {
     const [isAddPlacePopupOpen, setAddPlacePopupOpen] = useState(false);
     const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = useState(false);
     const [selectedCard, setSelectedCard] = useState({isVisible:false, name: "", link: ""});
-    const [userData, setCurrentUser] = useState({});
+    const [currentUser, setCurrentUser] = useState({});
     const [cards, setCards] = useState([]);
 
     function closeAllPopups () {
@@ -70,7 +70,7 @@ function App() {
     }
 
     function handleCardLike (card) {
-        const isLiked = card.likes.some( i => i._id === userData._id);
+        const isLiked = card.likes.some( i => i._id === currentUser._id);
 
         api.setLike(card._id, !isLiked)
             .then((newCard) => {
@@ -81,7 +81,7 @@ function App() {
     }
 
     function handleCardDislike (card) {
-        const isLiked = card.likes.some( i => i._id === userData._id);
+        const isLiked = card.likes.some( i => i._id === currentUser._id);
 
         api.deleteLike(card._id, isLiked)
             .then((newCard) => {
@@ -100,8 +100,15 @@ function App() {
             })
     }
 
+    function handleUpdateUser({name, about}) {
+        api.changeDataProfil({name, about})
+            .then(res => {
+                setCurrentUser(res);
+            });
+    }
+
     return (
-    <UserContext.Provider value={userData}>
+    <UserContext.Provider value={currentUser}>
         <Header />
         <Main 
             onEditProfile={handleEditProfileClick} 
@@ -114,7 +121,7 @@ function App() {
             cards={cards}
             setCards={setCards} />
         <Footer />
-        <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} />
+        <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} />
         <PopupWithForm 
             name="card" 
             title="Новое место" 

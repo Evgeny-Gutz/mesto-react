@@ -3,7 +3,7 @@ import {useState, useEffect, useContext} from "react";
 import { UserContext } from "../contexts/CurrentUserContext";
 import PopupWithForm from "./PopupWithForm";
 
-function EditProfilePopup({isOpen, onClose}) {
+function EditProfilePopup({isOpen, onClose, onUpdateUser}) {
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
     const currentUser = useContext(UserContext);
@@ -16,6 +16,16 @@ function EditProfilePopup({isOpen, onClose}) {
         setDescription(e.target.value);
     }
 
+    function handleSubmit(e) {
+        e.preventDefault();
+
+        onUpdateUser({
+            name,
+            about: description,
+        });
+        onClose();
+    }
+
     useEffect(() => {
         setName(currentUser.name);
         setDescription(currentUser.about)
@@ -26,7 +36,8 @@ function EditProfilePopup({isOpen, onClose}) {
             name="profile" 
             title="Редактировать профиль" 
             isOpen={isOpen && "popup_opened"} 
-            onClose={onClose}>
+            onClose={onClose}
+            onSubmit={handleSubmit}>
                 { name && description && <><label className="popup__field">
                     <input id="name-input" className="popup__input popup__input_type_name" type="text" name="name" value={name} onChange={handleChangeName} minLength="2" maxLength="40" required />
                     <span className="name-input-error popup__input-error"></span>
@@ -35,7 +46,7 @@ function EditProfilePopup({isOpen, onClose}) {
                     <input id="profession-input" className="popup__input popup__input_type_job" type="text" name="name" value={description} onChange={handleChangeDescription} minLength="2" maxLength="200" required />
                     <span className="profession-input-error popup__input-error"></span>
                 </label>
-                <input className="popup__submit" type="submit" name="submit" value="Сохранить"></input></>}
+                <input className="popup__submit" type="submit"  name="submit" value="Сохранить"></input></>}
         </PopupWithForm>
         
     );
