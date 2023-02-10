@@ -29,14 +29,15 @@ function EditProfilePopup({isOpen, onClose, onUpdateUser}) {
     useEffect(() => {
         setName(currentUser.name);
         setDescription(currentUser.about)
-    }, [currentUser]);
+    }, [currentUser, isOpen]);
 
     return (
         <PopupWithForm 
             name="profile" 
             title="Редактировать профиль" 
-            isOpen={isOpen && "popup_opened"} 
+            isOpen={isOpen} 
             onClose={onClose}
+            valueSubmit={"Сохранить"}
             onSubmit={handleSubmit}>
                 { name && description && <><label className="popup__field">
                     <input id="name-input" className="popup__input popup__input_type_name" type="text" name="name" value={name} onChange={handleChangeName} minLength="2" maxLength="40" required />
@@ -46,7 +47,7 @@ function EditProfilePopup({isOpen, onClose, onUpdateUser}) {
                     <input id="profession-input" className="popup__input popup__input_type_job" type="text" name="name" value={description} onChange={handleChangeDescription} minLength="2" maxLength="200" required />
                     <span className="profession-input-error popup__input-error"></span>
                 </label>
-                <input className="popup__submit" type="submit"  name="submit" value="Сохранить"></input></>}
+            </>}
         </PopupWithForm>
         
     );
