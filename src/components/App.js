@@ -39,15 +39,14 @@ function App() {
 
     useEffect(()=> {
         api.getInitialCards()
-            .then((cardList) => {
-                setCards([...cards, ...cardList]);
-            })
-            .catch((error) => console.log(`Ошибка при загрузке карточек: ${error}`))
+            .then(cardList => setCards([...cards, ...cardList]))
+            .catch(error => console.log(`Ошибка при загрузке карточек: ${error}`))
     }, []);
 
     useEffect(() => {
         api.getDataUser()
-            .then((res) => {setCurrentUser(res)});
+            .then(res => setCurrentUser(res))
+            .catch(error => console.log(`Ошибка при загрузке карточек: ${error}`))
     }, []);
     
     useEffect( () => {
@@ -74,50 +73,40 @@ function App() {
         const isLiked = card.likes.some( i => i._id === currentUser._id);
 
         api.setLike(card._id, !isLiked)
-            .then((newCard) => {
-                setCards((state) => {
-                    return state.map((c) => c._id === card._id ? newCard : c);
-                });
-            })
+            .then(newCard => setCards(state => state.map((c) => c._id === card._id ? newCard : c)))
+            .catch(error => console.log(`Ошибка при добавлении лайка: ${error}`))
     }
 
     function handleCardDislike (card) {
         const isLiked = card.likes.some( i => i._id === currentUser._id);
 
         api.deleteLike(card._id, isLiked)
-            .then((newCard) => {
-                setCards((state) => {
-                    return state.map((c) => c._id === card._id ? newCard : c);
-                });
-            })
+            .then(newCard => setCards(state => state.map((c) => c._id === card._id ? newCard : c)))
+            .catch(error => console.log(`Ошибка при удалении лайка: ${error}`))
     }
 
     function handleCardDelete(id) {
         api.deleteCard(id)
-            .then((resp) => {
-                setCards((state) => {
-                    return state.filter(e => e._id !== id);
-                })
-            })
+            .then(() => setCards((state) =>  state.filter(e => e._id !== id)))
+            .catch(error => console.log(`Ошибка при удалении картоки: ${error}`))
     }
 
     function handleUpdateUser({name, about}) {
         api.changeDataProfil({name, about})
-            .then(res => {
-                setCurrentUser(res);
-            });
+            .then(res => setCurrentUser(res))
+            .catch(error => console.log(`Ошибка при обновлении профиля: ${error}`))
     }
 
     function handleUpdateAvatar({avatar}) {
         api.changeAvatarProfil(avatar)
-            .then(res => setCurrentUser(res));
+            .then(res => setCurrentUser(res))
+            .catch(error => console.log(`Ошибка при изменении данных профиля: ${error}`))
     }
 
     function handleUpdatePlace({name, link}) {
         api.addNewCard({name, link})
-            .then(newCard => {
-                setCards([newCard, ...cards])
-            });
+            .then(newCard => setCards([newCard, ...cards]))
+            .catch(error => console.log(`Ошибка при добавлении новой картоки: ${error}`))
     }
 
     return (
